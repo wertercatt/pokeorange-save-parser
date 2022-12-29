@@ -857,14 +857,20 @@ with open(sys.argv[1], "rb") as savFile:
     print("Read", len(save), "Pokemon from Active Box.")
     for idx, x in enumerate(save):
         tempDict = {}
-        tempDict["mon_species"] = pokemonNames[int.from_bytes(save[idx][0], byteorder="big")]
-        tempDict["item"] = itemNames[int.from_bytes(save[idx][1], byteorder="big")]
-        tempDict["move1"] = moveNames[int.from_bytes(save[idx][2], byteorder="big")]
-        tempDict["move2"] = moveNames[int.from_bytes(save[idx][3], byteorder="big")]
-        tempDict["move3"] = moveNames[int.from_bytes(save[idx][4], byteorder="big")]
-        tempDict["move4"] = moveNames[int.from_bytes(save[idx][5], byteorder="big")]
-        tempDict["id"] = int.from_bytes(save[idx][6], byteorder="big")
-        tempDict["exp"] = int.from_bytes(save[idx][7], byteorder="big")
-        tempDict["caughtLocation"] = landmarkConstants[int.from_bytes(save[idx][22], byteorder="big") - 1]
+        tempDict["Species"] = pokemonNames[int.from_bytes(save[idx][0], byteorder="big")]
+        tempDict["Item"] = itemNames[int.from_bytes(save[idx][1], byteorder="big")]
+        tempDict["Move1"] = moveNames[int.from_bytes(save[idx][2], byteorder="big")]
+        tempDict["Move2"] = moveNames[int.from_bytes(save[idx][3], byteorder="big")]
+        tempDict["Move3"] = moveNames[int.from_bytes(save[idx][4], byteorder="big")]
+        tempDict["Move4"] = moveNames[int.from_bytes(save[idx][5], byteorder="big")]
+        tempDict["ID"] = int.from_bytes(save[idx][6], byteorder="big")
+        tempDict["Exp"] = int.from_bytes(save[idx][7], byteorder="big")
+        tempDict["HPExp"] = int.from_bytes(save[idx][8], byteorder="big")
+        tempDict["AtkExp"] = int.from_bytes(save[idx][9], byteorder="big")
+        tempDict["DefExp"] = int.from_bytes(save[idx][10], byteorder="big")
+        tempDict["SpdExp"] = int.from_bytes(save[idx][11], byteorder="big")
+        tempDict["SpcExp"] = int.from_bytes(save[idx][12], byteorder="big")
+        
+        tempDict["CaughtLocation"] = landmarkConstants[int.from_bytes(save[idx][22], byteorder="big") - 1]
         boxPokemon.append(tempDict)
     print(json.dumps(boxPokemon, sort_keys=True, indent=4))
