@@ -864,6 +864,7 @@ with open(sys.argv[1], "rb") as savFile:
         tempDict["move3"] = moveNames[int.from_bytes(save[idx][4], byteorder="big")]
         tempDict["move4"] = moveNames[int.from_bytes(save[idx][5], byteorder="big")]
         tempDict["id"] = int.from_bytes(save[idx][6], byteorder="big")
+        tempDict["exp"] = int.from_bytes(save[idx][7], byteorder="big")
         tempDict["caughtLocation"] = landmarkConstants[int.from_bytes(save[idx][22], byteorder="big") - 1]
         boxPokemon.append(tempDict)
     print(json.dumps(boxPokemon, sort_keys=True, indent=4))
