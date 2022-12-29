@@ -1,6 +1,7 @@
 import sys
 import struct
 import json
+import math
 
 struct_fmt = '>6c2s3s2s2s2s2s2s2s5c2s2c'
 struct_len = struct.calcsize(struct_fmt)
@@ -852,7 +853,7 @@ def read_chunks(f, length):
         if not data: break
         yield data
 
-with open(sys.argv[1], "rb") as savFile:
+with open("post-pinkan-berry.bin", "rb") as savFile:
     save = [struct_unpack(chunk) for chunk in read_chunks(savFile, struct_len)]
     print("Read", len(save), "Pokemon from Active Box.")
     for idx, x in enumerate(save):
@@ -870,7 +871,13 @@ with open(sys.argv[1], "rb") as savFile:
         tempDict["DefExp"] = int.from_bytes(save[idx][10], byteorder="big")
         tempDict["SpdExp"] = int.from_bytes(save[idx][11], byteorder="big")
         tempDict["SpcExp"] = int.from_bytes(save[idx][12], byteorder="big")
-        tempDict["DVs"] = save[idx][13].hex()
+        tempDict["DVs"] = {}
+        tempDict["DVs"]["HP"] = 0
+        tempDict["DVs"]["Atk"] = int.from_bytes(save[idx][13], byteorder="big")>>12	
+        tempDict["DVs"]["Def"] = int.from_bytes(save[idx][13], byteorder="big")%4096>>8
+        tempDict["DVs"]["Spd"] = int.from_bytes(save[idx][13], byteorder="big")%256>>4
+        tempDict["DVs"]["Spc"] = int.from_bytes(save[idx][13], byteorder="big")%16
+        tempDict["DVs"]["HP"] = (tempDict["DVs"]["Atk"]%2<<3)+(tempDict["DVs"]["Def"]%2<<2)+(tempDict["DVs"]["Spd"]%2<<1)+(tempDict["DVs"]["Spc"]%2)
         tempDict["PP1"] = int.from_bytes(save[idx][14], byteorder="big")
         tempDict["PP2"] = int.from_bytes(save[idx][15], byteorder="big")
         tempDict["PP3"] = int.from_bytes(save[idx][16], byteorder="big")
@@ -886,10 +893,10 @@ with open(sys.argv[1], "rb") as savFile:
         tempDict["Level"] = int.from_bytes(save[idx][21], byteorder="big")
         tempDict["ArtificallyDerivedStats"] = {}
         tempDict["ArtificallyDerivedStats"]["EVs"] = {}
-        tempDict["ArtificallyDerivedStats"]["EVs"]["HP"] = sqrt(tempDict["HPExp"]
-        tempDict["ArtificallyDerivedStats"]["EVs"]["Atk"] = sqrt(tempDict["AtkExp"]
-        tempDict["ArtificallyDerivedStats"]["EVs"]["Def"] = sqrt(tempDict["DefExp"]
-        tempDict["ArtificallyDerivedStats"]["EVs"]["Spd"] = sqrt(tempDict["SpdExp"]
-        tempDict["ArtificallyDerivedStats"]["EVs"]["Spc"] = sqrt(tempDict["SpcExp"]
+        tempDict["ArtificallyDerivedStats"]["EVs"]["HP"] = math.sqrt(tempDict["HPExp"])
+        tempDict["ArtificallyDerivedStats"]["EVs"]["Atk"] = math.sqrt(tempDict["AtkExp"])
+        tempDict["ArtificallyDerivedStats"]["EVs"]["Def"] = math.sqrt(tempDict["DefExp"])
+        tempDict["ArtificallyDerivedStats"]["EVs"]["Spd"] = math.sqrt(tempDict["SpdExp"])
+        tempDict["ArtificallyDerivedStats"]["EVs"]["Spc"] = math.sqrt(tempDict["SpcExp"])
         boxPokemon.append(tempDict)
     print(json.dumps(boxPokemon, indent=4))
