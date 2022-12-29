@@ -877,7 +877,12 @@ with open(sys.argv[1], "rb") as savFile:
         tempDict["PP4"] = int.from_bytes(save[idx][17], byteorder="big")
         tempDict["Happiness"] = int.from_bytes(save[idx][18], byteorder="big")
         tempDict["Flags"] = tempDict["DVs"] = save[idx][19].hex()
-        tempDict["CaughtLocation"] = landmarkConstants[int.from_bytes(save[idx][20], byteorder="big") - 128]
+        if int.from_bytes(save[idx][20], byteorder="big") >= 128:
+            tempDict["OTSex"] = 1
+            tempDict["CaughtLocation"] = landmarkConstants[int.from_bytes(save[idx][20], byteorder="big") - 128]
+        else:
+            tempDict["OTSex"] = 0
+            tempDict["CaughtLocation"] = landmarkConstants[int.from_bytes(save[idx][20], byteorder="big")]
         tempDict["Level"] = int.from_bytes(save[idx][21], byteorder="big")
         boxPokemon.append(tempDict)
     print(json.dumps(boxPokemon, indent=4))
