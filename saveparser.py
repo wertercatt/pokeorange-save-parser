@@ -2,7 +2,7 @@ import sys
 import struct
 import json
 
-struct_fmt = '>6c2s3s2s2s2s2s2s2B5c2s2c'
+struct_fmt = '>6c2s3s2s2s2s2s2s2s5c2s2c'
 struct_len = struct.calcsize(struct_fmt)
 struct_unpack = struct.Struct(struct_fmt).unpack_from
 boxPokemon = []
@@ -870,7 +870,14 @@ with open(sys.argv[1], "rb") as savFile:
         tempDict["DefExp"] = int.from_bytes(save[idx][10], byteorder="big")
         tempDict["SpdExp"] = int.from_bytes(save[idx][11], byteorder="big")
         tempDict["SpcExp"] = int.from_bytes(save[idx][12], byteorder="big")
-        
-        tempDict["CaughtLocation"] = landmarkConstants[int.from_bytes(save[idx][22], byteorder="big") - 1]
+        tempDict["DVs"] = save[idx][13].hex()
+        tempDict["PP1"] = int.from_bytes(save[idx][14], byteorder="big")
+        tempDict["PP2"] = int.from_bytes(save[idx][15], byteorder="big")
+        tempDict["PP3"] = int.from_bytes(save[idx][16], byteorder="big")
+        tempDict["PP4"] = int.from_bytes(save[idx][17], byteorder="big")
+        tempDict["Happiness"] = int.from_bytes(save[idx][18], byteorder="big")
+        tempDict["Flags"] = tempDict["DVs"] = save[idx][19].hex()
+        tempDict["CaughtLocation"] = landmarkConstants[int.from_bytes(save[idx][20], byteorder="big") - 128]
+        tempDict["Level"] = int.from_bytes(save[idx][21], byteorder="big")
         boxPokemon.append(tempDict)
-    print(json.dumps(boxPokemon, sort_keys=True, indent=4))
+    print(json.dumps(boxPokemon, indent=4))
