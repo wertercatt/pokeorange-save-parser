@@ -883,7 +883,9 @@ with open("post-pinkan-berry.bin", "rb") as savFile:
         tempDict["PP3"] = int.from_bytes(save[idx][16], byteorder="big")
         tempDict["PP4"] = int.from_bytes(save[idx][17], byteorder="big")
         tempDict["Happiness"] = int.from_bytes(save[idx][18], byteorder="big")
-        tempDict["Flags"] = save[idx][19].hex()
+        tempDict["Flags"] = ""
+        for byte in save[idx][19]:
+            tempDict["Flags"] = tempDict["Flags"] + f"{byte:0>8b}"
         if int.from_bytes(save[idx][20], byteorder="big") >= 128:
             tempDict["OTSex"] = 1
             tempDict["CaughtLocation"] = landmarkConstants[int.from_bytes(save[idx][20], byteorder="big") - 128]
