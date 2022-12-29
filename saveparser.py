@@ -876,7 +876,7 @@ with open(sys.argv[1], "rb") as savFile:
         tempDict["PP3"] = int.from_bytes(save[idx][16], byteorder="big")
         tempDict["PP4"] = int.from_bytes(save[idx][17], byteorder="big")
         tempDict["Happiness"] = int.from_bytes(save[idx][18], byteorder="big")
-        tempDict["Flags"] = tempDict["DVs"] = save[idx][19].hex()
+        tempDict["Flags"] = save[idx][19].hex()
         if int.from_bytes(save[idx][20], byteorder="big") >= 128:
             tempDict["OTSex"] = 1
             tempDict["CaughtLocation"] = landmarkConstants[int.from_bytes(save[idx][20], byteorder="big") - 128]
@@ -884,5 +884,12 @@ with open(sys.argv[1], "rb") as savFile:
             tempDict["OTSex"] = 0
             tempDict["CaughtLocation"] = landmarkConstants[int.from_bytes(save[idx][20], byteorder="big")]
         tempDict["Level"] = int.from_bytes(save[idx][21], byteorder="big")
+        tempDict["ArtificallyDerivedStats"] = {}
+        tempDict["ArtificallyDerivedStats"]["EVs"] = {}
+        tempDict["ArtificallyDerivedStats"]["EVs"]["HP"] = sqrt(tempDict["HPExp"]
+        tempDict["ArtificallyDerivedStats"]["EVs"]["Atk"] = sqrt(tempDict["AtkExp"]
+        tempDict["ArtificallyDerivedStats"]["EVs"]["Def"] = sqrt(tempDict["DefExp"]
+        tempDict["ArtificallyDerivedStats"]["EVs"]["Spd"] = sqrt(tempDict["SpdExp"]
+        tempDict["ArtificallyDerivedStats"]["EVs"]["Spc"] = sqrt(tempDict["SpcExp"]
         boxPokemon.append(tempDict)
     print(json.dumps(boxPokemon, indent=4))
