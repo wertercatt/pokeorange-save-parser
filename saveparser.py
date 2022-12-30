@@ -1,6 +1,7 @@
 import json
 import math
 import struct
+import sys
 
 struct_fmt = ">6c2s3s2s2s2s2s2s2s5c2s2c"
 struct_len = struct.calcsize(struct_fmt)
@@ -855,17 +856,13 @@ def read_chunks(f, length):
         yield data
 
 
-with open("post-pinkan-berry.bin", "rb") as savFile:
+with open(sys.argv[1], "rb") as savFile:
     save = [struct_unpack(chunk) for chunk in read_chunks(savFile, struct_len)]
-    print("Read", len(save), "Pokemon from Active Box.")
     for idx, x in enumerate(save):
         tempDict = {}
         tempDict["Species"] = pokemonNames[
             int.from_bytes(save[idx][0], byteorder="big")
         ]
-        tempDict["Shiny"] = (int.from_bytes(save[idx][19], byteorder="big") & 8) >> 3
-        tempDict["Pinkan"] = (int.from_bytes(save[idx][19], byteorder="big") & 4) >> 2
-        tempDict["Form"] = int.from_bytes(save[idx][19], byteorder="big") & 3
         tempDict["Item"] = itemNames[int.from_bytes(save[idx][1], byteorder="big")]
         tempDict["Move1"] = moveNames[int.from_bytes(save[idx][2], byteorder="big")]
         tempDict["Move2"] = moveNames[int.from_bytes(save[idx][3], byteorder="big")]
@@ -899,9 +896,15 @@ with open("post-pinkan-berry.bin", "rb") as savFile:
         tempDict["PP3"] = int.from_bytes(save[idx][16], byteorder="big")
         tempDict["PP4"] = int.from_bytes(save[idx][17], byteorder="big")
         tempDict["Happiness"] = int.from_bytes(save[idx][18], byteorder="big")
-        tempDict["Flags"] = ""
+        tempDict["Flags"] = {}
+        tempDict["Flags"]["Raw"] = ""
         for byte in save[idx][19]:
-            tempDict["Flags"] = tempDict["Flags"] + f"{byte:0>8b}"
+            tempDict["Flags"]["Raw"] = tempDict["Flags"]["Raw"] + f"{byte:0>8b}"
+        tempDict["Flags"]["Gender"] = (int.from_bytes(save[idx][19], byteorder="big") & 240)
+        tempDict["Flags"]["Shiny"] = (int.from_bytes(save[idx][19], byteorder="big") & 8)
+        tempDict["Flags"]["Pinkan"] = (int.from_bytes(save[idx][19], byteorder="big") & 4)
+        tempDict["Flags"]["Form"] = int.from_bytes(save[idx][19], byteorder="big") & 3
+
         if int.from_bytes(save[idx][20], byteorder="big") >= 128:
             tempDict["OTSex"] = 1
             tempDict["CaughtLocation"] = landmarkConstants[
