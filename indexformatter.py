@@ -1,6 +1,6 @@
 import sys
 
-with open(sys.argv[1], "r", encoding="utf-8") as txtFile:
+with open(sys.argv[1], encoding="utf-8") as txtFile:
     indexList = txtFile.readlines()
 with open(sys.argv[1] + "_processed.txt", "w", encoding="utf-8") as output:
     for idx, x in enumerate(indexList):
