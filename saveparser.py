@@ -859,6 +859,9 @@ with open("post-pinkan-berry.bin", "rb") as savFile:
     for idx, x in enumerate(save):
         tempDict = {}
         tempDict["Species"] = pokemonNames[int.from_bytes(save[idx][0], byteorder="big")]
+        tempDict["Shiny"] = (int.from_bytes(save[idx][19], byteorder="big") & 8)>>3
+        tempDict["Pinkan"] = (int.from_bytes(save[idx][19], byteorder="big") & 4)>>2
+        tempDict["Form"] =  int.from_bytes(save[idx][19], byteorder="big") & 3
         tempDict["Item"] = itemNames[int.from_bytes(save[idx][1], byteorder="big")]
         tempDict["Move1"] = moveNames[int.from_bytes(save[idx][2], byteorder="big")]
         tempDict["Move2"] = moveNames[int.from_bytes(save[idx][3], byteorder="big")]
@@ -885,7 +888,7 @@ with open("post-pinkan-berry.bin", "rb") as savFile:
         tempDict["Happiness"] = int.from_bytes(save[idx][18], byteorder="big")
         tempDict["Flags"] = ""
         for byte in save[idx][19]:
-            tempDict["Flags"] = tempDict["Flags"] + f"{byte:0>8b}"
+        	tempDict["Flags"] = tempDict["Flags"] + f"{byte:0>8b}"
         if int.from_bytes(save[idx][20], byteorder="big") >= 128:
             tempDict["OTSex"] = 1
             tempDict["CaughtLocation"] = landmarkConstants[int.from_bytes(save[idx][20], byteorder="big") - 128]
